@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matsetsebane Mojapelo - Developer Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #111118;
+            --card-bg: rgba(17, 17, 24, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --accent: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.3);
+            --purple: #8b5cf6;
+            --green: #10b981;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --neon-glow: 0 0 20px var(--accent-glow);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--primary-bg);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(134, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Intro Animation */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a1a2e, #16213e, #0f0f1e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1s ease-in-out 4s forwards;
+        }
+
+        .intro-content {
+            text-align: center;
+            color: white;
+        }
+
+        .glitch-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: var(--neon-glow);
+            animation: glitch 2s infinite, typewriter 3s steps(26) 0.5s forwards;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--accent);
+            width: 0;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: 1rem;
+            opacity: 0;
+            animation: slideUp 1s ease-out 2.5s forwards;
+            background: var(--gradient);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideUp 1s ease-out 2.5s forwards, gradientMove 3s ease-in-out infinite;
+        }
+
+        .matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .matrix-char {
+            position: absolute;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            animation: matrixFall linear infinite;
+        }
+
+        .portfolio-content {
+            opacity: 0;
+            animation: fadeInPortfolio 1.5s ease-out 5s forwards;
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Glass Card Effect */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient);
+            opacity: 0.6;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .profile-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: var(--neon-glow), 0 0 60px rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: var(--neon-glow), 0 0 80px rgba(0, 212, 255, 0.4);
+        }
+
+        .profile-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 220px;
+            height: 220px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent), var(--purple), var(--green), var(--accent));
+            animation: rotate 4s linear infinite;
+            z-index: 1;
+        }
+
+        .profile-ring::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--primary-bg);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 3s ease-in-out infinite;
+        }
+
+        .tagline {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .bio {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            animation: scaleIn 1s ease-out forwards;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .skill-category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .skill-category h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--accent);
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .skill-tag:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Certifications Table */
+        .cert-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .cert-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cert-table th {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cert-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .cert-table tbody tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .cert-table tbody tr:hover td:first-child {
+            color: var(--accent);
+        }
+
+        /* Goals Section */
+        .goals {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goals::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.1);
+        }
+
+        .contact-card h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .contact-card a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card a:hover {
+            color: var(--text-primary);
+            text-shadow: var(--neon-glow);
+        }
+
+        /* Animations */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes glitch {
+            0%, 100% { text-shadow: var(--neon-glow); }
+            25% { text-shadow: -2px 0 20px #ff0080, 2px 0 20px var(--accent); }
+            50% { text-shadow: 2px 0 20px #ff0080, -2px 0 20px #0080ff; }
+            75% { text-shadow: -2px 0 20px #0080ff, 2px 0 20px #ff0080; }
+        }
+
+        @keyframes typewriter {
+            to { width: 100%; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes matrixFall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes fadeInPortfolio {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+                margin: 1rem 0;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cert-table th,
+            .cert-table td {
+                padding: 1rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .profile-photo {
+                width: 150px;
+                height: 150px;
+            }
+
+            .profile-ring {
+                width: 170px;
+                height: 170px;
+                top: -10px;
+                left: -10px;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--accent), var(--purple));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--purple), var(--accent));
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+
+    <!-- Intro Animation Screen -->
+    <div class="intro-screen">
+        <div class="matrix-bg" id="matrixBg"></div>
+        <div class="intro-content">
+            <h1 class="glitch-text">MATSETSEBANE MOJAPELO</h1>
+            <p class="subtitle">Initializing Portfolio Systems...</p>
+        </div>
+    </div>
+
+    <div class="portfolio-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="profile-container">
+                    <div class="profile-ring"></div>
+                   <img src="raza.jpg" alt="Matsetsebane Mojapelo" class="profile-photo">
+                </div>
+                <h1>Matsetsebane Mojapelo</h1>
+                <p class="tagline">Driving Innovation Through Code & Cloud Technologies</p>
+                <p class="bio">
+                    I'm a passionate developer and lifelong learner committed to using technology for meaningful impact. 
+                    With a strong foundation in cloud platforms, programming, and AI, I aim to contribute to South Africa's 
+                    digital transformation through socially-aware, technically sound solutions.
+                </p>
+            </section>
+
+            <!-- Skills Section -->
+            <section class="glass-card">
+                <div class="section-header">
+                    <h2 class="section-title">🧠 Skills & Core Competencies</h2>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>💻 Programming Languages</h3>
+                        <div>
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">TypeScript</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>☁️ Cloud Platforms</h3>
+                        <div>
+                            <span class="skill-tag">Amazon Web Services (AWS)</span>
+                            <span class="skill-tag">Microsoft Azure</span>
+                            <span class="skill-tag">Oracle Cloud Infrastructure</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>🤖 AI & Machine Learning</h3>
+                        <div>
+                            <span class="skill-tag">Generative AI Solutions</span>
+                            <span class="skill-tag">Machine Learning Fundamentals</span>
+                            <span class="skill-tag">AI Use Cases & Applications</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>🏗️ Development & Architecture</h3>
+                        <div>
+                            <span class="skill-tag">REST APIs</span>
+                            <span class="skill-tag">Serverless Architecture</span>
+                            <span class="skill-tag">Full Stack Development</span>
+                            <span class="skill-tag">Business Analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Certifications Section -->
+            <section class="glass-card">
+                <div class="section-header">
+                    <h2 class="section-title">🏆 Professional Certifications</h2>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                        Over a dozen industry-recognized certifications reflecting my commitment to technical excellence, 
+                        ethical innovation, and lifelong learning.
+                    </p>
+                </div>
+                <div class="cert-container">
+                    <table class="cert-table">
+                        <thead>
+                            <tr>
+                                <th>Certification</th>
+                                <th>Issuer</th>
+                                <th>Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Artificial Intelligence: Beginners Guide</td><td>Simplilearn SkillUp</td><td>2025</td></tr>
+                            <tr><td>Fundamentals of Machine Learning & AI</td><td>AWS Training & Certification</td><td>2025</td></tr>
+                            <tr><td>Exploring AI Use Cases & Applications</td><td>AWS Training & Certification</td><td>2025</td></tr>
+                            <tr><td>Developing Machine Learning Solutions</td><td>AWS Training & Certification</td><td>2025</td></tr>
+                            <tr><td>Developing Generative AI Solutions</td><td>AWS Training & Certification</td><td>2025</td></tr>
+                            <tr><td>Security, Compliance & Governance for AI Solutions</td><td>AWS Training & Certification</td><td>2025</td></tr>
+                            <tr><td>Planning a Generative AI Project</td><td>AWS Training & Certification</td><td>2025</td></tr>
+                            <tr><td>Oracle Cloud Infrastructure AI Foundations</td><td>Oracle</td><td>2025</td></tr>
+                            <tr><td>Oracle Fusion AI Agent Studio</td><td>Oracle</td><td>2025</td></tr>
+                            <tr><td>HP AI for Beginners</td><td>HP</td><td>2025</td></tr>
+                            <tr><td>Azure Serverless REST APIs</td><td>Microsoft</td><td>2025</td></tr>
+                            <tr><td>TypeScript</td><td>Microsoft</td><td>2025</td></tr>
+                            <tr><td>Business Analysis & Process Management</td><td>IBM</td><td>2025</td></tr>
+                            <tr><td>FNB App of the Year Full Stack Developer</td><td>FNB</td><td>2025</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Goals Section -->
+            <section class="glass-card">
+                <div class="section-header">
+                    <h2 class="section-title">🎯 Professional Goals & Vision</h2>
+                </div>
+                <div class="goals">
+                    <p>
+                        I'm focused on mastering software development fundamentals, building a strong technical portfolio, 
+                        and contributing to inclusive digital solutions. My long-term vision is to become a socially-conscious 
+                        developer who bridges technology and community empowerment.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section class="glass-card">
+                <div class="section-header">
+                    <h2 class="section-title">📫 Let's Connect</h2>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <h3>📧 Email</h3>
+                        <p>matsetsebanep@gmail.com</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>📍 Location</h3>
+                        <p>Cape Town, South Africa</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>🔗 Professional Links</h3>
+                        <p>
+                            <a href="https://github.com/MATSETSEBANE" target="_blank">GitHub</a><br>
+                            <a href="https://www.linkedin.com/in/matsetsebane-plaza-mojapelo-96a520344" target="_blank">LinkedIn</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Create Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixBg = document.getElementById('matrixBg');
+            const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            
+            for (let i = 0; i < 50; i++) {
+                const span = document.createElement('span');
+                span.className = 'matrix-char';
+                span.textContent = chars[Math.floor(Math.random() * chars.length)];
+                span.style.left = Math.random() * 100 + '%';
+                span.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                span.style.animationDelay = Math.random() * 2 + 's';
+                matrixBg.appendChild(span);
+            }
+        }
+
+        // Smooth scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideUp 0.8s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        // Initialize matrix effect and observers when page loads
+        window.addEventListener('load', () => {
+            createMatrixRain();
+            
+            // Observe all glass cards for animations
+            document.querySelectorAll('.glass-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+
+        // Add floating particles effect
+        function createFloatingParticles() {
+            const container = document.querySelector('.bg-animation');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    background: var(--accent);
+                    border-radius: 50%;
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    animation: float ${5 + Math.random() * 10}s ease-in-out infinite;
+                    opacity: 0.3;
+                `;
+                container.appendChild(particle);
+            }
+        }
+
+        // Add CSS for floating animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0px) translateX(0px); }
+                25% { transform: translateY(-20px) translateX(10px); }
+                50% { transform: translateY(0px) translateX(-10px); }
+                75% { transform: translateY(10px) translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize floating particles
+        setTimeout(createFloatingParticles, 5000);
+    </script>
+</body>
+</html>
